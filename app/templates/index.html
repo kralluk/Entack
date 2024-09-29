@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entack</title> <!-- Nastavení názvu stránky (title) -->
+    <title>Entack</title>
+
+    <!-- Odkaz na CSS soubor v /static/styles.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+
     <script>
         // JavaScript funkce pro spuštění odpočtu
         function startCountdown(seconds) {
@@ -30,16 +35,9 @@
             return false;  // Zabrání okamžitému odeslání formuláře
         }
     </script>
-    <style>
-        /* Styl pro zarovnání nápisu uprostřed */
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
-    <h1>Entack</h1> <!-- Nápis Entack uprostřed nahoře -->
+    <h1>Entack</h1> 
 
     <h3>Pingflood</h3>
     <!-- Formulář pro spuštění Ping Floodu -->

