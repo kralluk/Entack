@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Server</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <script src="scripts/app.js" defer></script>
+</head>
+<body>
+    <h1>Control Server</h1>
+
+    <label for="target_ip">Zadejte IP adresu:</label><br>
+    <input type="text" id="target_ip" required><br><br>
+
+    <label for="countdown_seconds">Zadejte odpočet (v sekundách):</label><br>
+    <input type="number" id="countdown_seconds" min="1" required><br><br>
+
+    <button onclick="startFlood()">Spustit Ping Flood</button>
+
+    <p id="message"></p>
+
+    <button id="stop_flood" style="display:none;" onclick="stopFlood()">Zastavit Ping Flood</button>
+</body>
+</html>

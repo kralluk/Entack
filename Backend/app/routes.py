@@ -6,16 +6,12 @@ import threading
 # Sledování aktivních ping floodů
 active_threads = {}
 
-# Zobrazí formulář na hlavní stránce
-@app.route('/')
-def index():
-    return render_template('index.html')  # Vrátí šablonu
 
-# Endpoint pro spuštění ping floodu z formuláře
-@app.route('/start_flood', methods=['POST'])
+# API endpoint pro spuštění ping floodu
+@app.route('/api/start_flood', methods=['POST'])
 def start_flood():
-    target_ip = request.form.get('target_ip')
-    countdown_seconds = request.form.get('countdown_seconds')
+    target_ip = request.json.get('target_ip')
+    countdown_seconds = request.json.get('countdown_seconds')
 
     if not target_ip:
         return jsonify({"error": "IP adresa není poskytnuta"}), 400
@@ -29,10 +25,10 @@ def start_flood():
     active_threads[thread_id] = ping_thread
 
     # Zpráva o zahájení ping floodu
-    return render_template('index.html', message=f"Ping flood běží na {target_ip}....", thread_id=thread_id)
+    return jsonify({"message": f"Ping flood běží na {target_ip}...", "thread_id": thread_id})
 
-# Endpoint pro zastavení ping floodu
-@app.route('/stop_flood/<int:thread_id>', methods=['POST'])
+# API endpoint pro zastavení ping floodu
+@app.route('/api/stop_flood/<int:thread_id>', methods=['POST'])
 def stop_flood_route(thread_id):
     ping_thread = active_threads.get(thread_id)
     
@@ -43,4 +39,4 @@ def stop_flood_route(thread_id):
     del active_threads[thread_id]
 
     # Zpráva o zastavení ping floodu
-    return render_template('index.html', message="Ping flood byl zastaven.")
+    return jsonify({"message": "Ping flood byl zastaven."})
